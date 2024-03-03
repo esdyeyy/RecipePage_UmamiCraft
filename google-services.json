@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "850664679290",
+    "firebase_url": "https://umami-469a0-default-rtdb.firebaseio.com",
+    "project_id": "umami-469a0",
+    "storage_bucket": "umami-469a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850664679290:android:65c22d3c6fc5bb494458c3",
+        "android_client_info": {
+          "package_name": "com.grouptwo.umami"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwCqqwf2rWNJ4X0ONqDYfV7Cz5OfP3nes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

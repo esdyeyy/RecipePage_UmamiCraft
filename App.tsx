@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Modal, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CustomizeRecipe from './CustomizeRecipe';
-
+import firebase from './firebase';
+import {database} from './firebase'; 
+import { get, ref } from 'firebase/database';
 const Stack = createStackNavigator();
 
 const RecipePage: React.FC = () => {
@@ -27,6 +29,7 @@ const RecipePage: React.FC = () => {
     setRemoveModalVisible(false);
   };
   
+  
 
   return (
     <NavigationContainer>
@@ -38,6 +41,22 @@ const RecipePage: React.FC = () => {
   );
 
   function RecipeScreen({ navigation }: { navigation: any }) {
+    const [recipe, setRecipe] = useState<any>(null);
+  
+    useEffect(() => {
+      const fetchRecipe = async () => {
+        try {
+          const snapshot = await get(ref(database, 'recipes/recipe1')); // Fix the line here
+          const recipeData = snapshot.val();
+          console.log('Recipe Data:', recipeData);
+          setRecipe(recipeData);
+        } catch (error) {
+          console.error('Error fetching recipe:', error);
+        }
+      };
+      
+      fetchRecipe();
+    }, []);
     return (
     <ScrollView style={styles.container}>
       <View style={styles.header} />
@@ -58,27 +77,27 @@ const RecipePage: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      <View  style={styles.titleContainer}>
-        <Text style={styles.recipeTitle}>Delicious Recipe</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.recipeTitle}>{recipe?.recipe_name || 'Loading...'}</Text>
       </View>
-     <View style={styles.ImageContainer}>
-      <Image
-          source={{ uri: 'https://picsum.photos/200' }}
-          style={styles.recipeImage}
-        />
-     </View>
-           
+
+      <View style={styles.ImageContainer}>
+        <Image source={{ uri: recipe?.image_url || 'https://picsum.photos/200' }} style={styles.recipeImage} />
+      </View>
+
       <View style={styles.stepsContainer}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Ingredients:</Text>
-          <Text>- Ingredient 1</Text>
-          <Text>- Ingredient 2</Text> 
+          {recipe?.ingredients?.map((ingredient: string, index: number) => (
+            <Text key={index}>- {ingredient}</Text>
+          ))}
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Cooking Steps:</Text>
-          <Text>1. Step 1 Lorem ipsum dolor sit amet.</Text>
-          <Text>2. Step 2 Consectetur adipiscing elit.</Text>
+          {recipe?.steps?.map((step: string, index: number) => (
+            <Text key={index}>{`${index + 1}. ${step}`}</Text>
+          ))}
         </View>
       </View>
       
